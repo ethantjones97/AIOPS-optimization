@@ -1,4 +1,7 @@
-﻿start,end,capacity,cost
+﻿start,end,capacities,unit costs
+source,gary,1800,5
+source,clev,2000,10
+source,pitt,1900,8
 gary,fra,900,39
 gary,det,1200,14
 gary,lan,600,11
@@ -20,3 +23,10 @@ pitt,win,400,13
 pitt,stl,1700,28
 pitt,fre,1100,99
 pitt,laf,1000,20
+fra,sink,500,12
+det,sink,800,11
+lan,sink,1250,10
+win,sink,1430,9
+stl,sink,400,8
+fre,sink,900,7
+laf,sink,2000,8
