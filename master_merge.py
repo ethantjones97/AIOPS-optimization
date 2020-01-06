@@ -2,8 +2,13 @@
 import pandas as pd 
 from time import process_time
 import networkx as nx
+import graphviz
+from graphviz import Digraph
 import matplotlib.pyplot as plt
 from ortools.graph import pywrapgraph
+import os
+os.environ["PATH"] += os.pathsep + 'C:/Users/etjones/Desktop/AI OPS/AIOPS-optimization/release/bin'
+
 #%%
 t1_start = process_time()
 #import libraries
@@ -60,8 +65,21 @@ H = nx.relabel_nodes(G, NodeDict)
 pos = nx.spring_layout(H)
 nx.draw(H, pos, with_labels=True)
 plt.show()
+
 #%%
-# CHEATING and definina all resources at the source to start. we need to find a way to have the user input this in the csv, then we can ingest it. 
+f = Digraph('graphviz plot1', filename='transportation network viz')
+f.attr(rankdir='LR', size='8,3')
+
+for ii in range(len(start_nodes)):
+    f.attr('node', shape='circle')
+    node1 = edges[ii][0]
+    node2 = edges[ii][1]
+    title1 = NodeDict[node1]
+    title2 = NodeDict[node2]
+    f.edge(f'{title1}', f'{title2}', label = f'Capacity: {capacities[ii]} Cost: {unit_costs[ii]}')
+
+f.view()
+#%%
 
 supply_nodes = []
 supply_values = []
@@ -131,6 +149,24 @@ export_csv = solution_df.to_csv(r'C:\Users\etjones\Desktop\AI OPS\AIOPS-optimiza
 print(solution_df)    
 print('\n', "Time =", process_time() - t1_start, "seconds")
 
+#%%
+g = Digraph('graphviz plot2', filename='solution network viz')
+g.attr(rankdir='LR', size='8,3')
+
+for ii in range(len(start_nodes)):
+    g.attr('node', shape='circle')
+    if solution_lol[ii][2] != 0:
+        node1 = solution_lol[ii][0]
+        node2 = solution_lol[ii][1]
+        if solution_lol[ii][2] == solution_lol[ii][3]:
+            g.edge(f'{node1}', f'{node2}', label = f'Flow: {solution_lol[ii][2]} Capacity: {solution_lol[ii][3]} Cost: {solution_lol[ii][4]}', fontcolor = 'red')
+        else:
+            g.edge(f'{node1}', f'{node2}', label = f'Flow: {solution_lol[ii][2]} Capacity: {solution_lol[ii][3]} Cost: {solution_lol[ii][4]}')
+
+g.node('legend', 'Legend: \l' + '   red - channel is at max capacity', shape = 'rectangle', fontsize ='14')
+g.node('mincost', f'Minimum Cost: {min_cost_flow.OptimalCost()}', shape = 'rectangle', fontsize ='22',fontcolor='blue')
+
+g.view()
 # RECOMMENDED NEXT STEPS:
 # 1. Validate results using AMPL
 # 2. Improve Network visualization
