@@ -1,0 +1,22 @@
+﻿start,end,capacities,unit costs
+gary,fra,5000,39
+gary,det,5000,14
+gary,lan,5000,11
+gary,win,5000,14
+gary,stl,5000,16
+gary,fre,5000,82
+gary,laf,5000,8
+clev,fra,5000,27
+clev,det,5000,9
+clev,lan,5000,12
+clev,win,5000,9
+clev,stl,5000,26
+clev,fre,5000,95
+clev,laf,5000,17
+pitt,fra,5000,24
+pitt,det,5000,14
+pitt,lan,5000,17
+pitt,win,5000,13
+pitt,stl,5000,28
+pitt,fre,5000,99
+pitt,laf,5000,20
