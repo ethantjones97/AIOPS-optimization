@@ -12,15 +12,15 @@ from builtins import map, range, object, zip, sorted
 import sys
 import os
 from amplpy import AMPL, Environment
-os.environ["PATH"] += os.pathsep + 'C:/Users/etjones/Desktop/AI OPS/AIOPS-optimization/release/bin'
+os.environ["PATH"] += os.pathsep + r'C:\Users\etjones\Desktop\AI OPS\AIOPS-optimization\minimum_cost_flow\release\bin'
 
 #%%
 t1_start = process_time()
 #import libraries
 # update to your local repository
-data_connections = pd.read_csv("C:/Users/etjones/Desktop/AI OPS/AIOPS-optimization/Transportation_Network2.csv") 
-data_supply = pd.read_csv("C:/Users/etjones/Desktop/AI OPS/AIOPS-optimization/supply2.csv") 
-data_demand = pd.read_csv("C:/Users/etjones/Desktop/AI OPS/AIOPS-optimization/demand2.csv") 
+data_connections = pd.read_csv(r"C:\Users\etjones\Desktop\AI OPS\AIOPS-optimization\minimum_cost_flow\data_files\Transportation_Network2.csv") 
+data_supply = pd.read_csv(r"C:\Users\etjones\Desktop\AI OPS\AIOPS-optimization\minimum_cost_flow\data_files\supply2.csv") 
+data_demand = pd.read_csv(r"C:\Users\etjones\Desktop\AI OPS\AIOPS-optimization\minimum_cost_flow\data_files\demand2.csv") 
 #%%
 list1 = data_connections.start.unique()
 list2 = data_connections.end.unique()
@@ -85,12 +85,22 @@ for ii in range(len(start_nodes)):
 
 f.view()
 #%%
-
 supply_nodes = []
 supply_values = []
 for index, row in data_supply.iterrows():
     supply_nodes.append(data_supply['node'][index])
     supply_values.append(data_supply['supply'][index])
+
+supply_values1 =  [None] * len(NodeDict)
+
+for ii in range(len(NodeDict)):
+    if NodeDict[ii] in supply_nodes:
+        index = supply_nodes.index(NodeDict[ii])
+        supply_values1[ii] = supply_values[index]
+    else:
+        supply_values1[ii] = 0
+               
+supply_values = supply_values1
 
 for key, value in NodeDict.items():
     for i in range(len(supply_nodes)):
@@ -106,6 +116,17 @@ for index, row in data_demand.iterrows():
     demand_nodes.append(data_demand['node'][index])
     demand_values.append(data_demand['demand'][index])
 
+demand_values1 =  [None] * len(NodeDict)
+
+for ii in range(len(NodeDict)):
+    if NodeDict[ii] in demand_nodes:
+        index = demand_nodes.index(NodeDict[ii])
+        demand_values1[ii] = demand_values[index]
+    else:
+        demand_values1[ii] = 0
+               
+demand_values = demand_values1
+
 for key, value in NodeDict.items():
     for i in range(len(demand_nodes)):
         if demand_nodes[i] == value:
@@ -114,11 +135,16 @@ for key, value in NodeDict.items():
         if demand_values[i] == value:
             demand_values[i] = key
 
-combo_nodes = supply_nodes
+combo_nodes = range(len(NodeDict))
 combo_values = []
 for ii in range(len(combo_nodes)): 
     combo_values.append(supply_values[ii] + demand_values[ii]) 
 
+if sum(combo_values) != 0:
+    raise Exception('The total supply in each of the nodes mush equal the total demand.' + '\n' + 
+                    f'Total Demand = {sum(demand_values)}' + '\n' +
+                    f'Total supply = {sum(supply_values)}' + '\n')
+    
 #%%
 #cast to python integers from NumPy integers:
 capacities = [int(i) for i in capacities]
@@ -197,43 +223,6 @@ def main(argc, argv):
         print('\n' + "Optimal Flow:")
         ampl.display('Trans')
         print('\n' + "Compare pdf flow to the above table to confirm optmial flows")
-        #a = ampl.getVariable('Trans')
-        #print("Objective is:", a.value())
-        
-
-        # Get objective entity by AMPL name
-        #totalcost = ampl.getObjective('total_cost')
-        # Print it
-        #print("Objective is:", totalcost.value())
-
-        # Reassign data - specific instances
-        # cost = ampl.getParameter('cost')
-        # cost.setValues({'BEEF': 5.01, 'HAM': 4.55})
-        # print("Increased costs of beef and ham.")
-
-        # Resolve and display objective
-        # ampl.solve()
-        # print("New objective value:", totalcost.value())
-
-        # Reassign data - all instances
-        # elements = [3, 5, 5, 6, 1, 2, 5.01, 4.55]
-        # cost.setValues(elements)
-        # print("Updated all costs.")
-
-        # Resolve and display objective
-        # ampl.solve()
-        # print("New objective value:", totalcost.value())
-
-        # Get the values of the variable Buy in a dataframe object
-        # buy = ampl.getVariable('Buy')
-        # df = buy.getValues()
-        # Print them
-        # print(df)
-
-        # Get the values of an expression into a DataFrame object
-        # df2 = ampl.getData('{j in FOOD} 100*Buy[j]/Buy[j].ub')
-        # # Print them
-        # print(df2)
     except Exception as e:
         print(e)
         raise
