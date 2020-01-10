@@ -22,6 +22,18 @@ data_connections = pd.read_csv(r"C:\Users\etjones\Desktop\AI OPS\AIOPS-optimizat
 data_supply = pd.read_csv(r"C:\Users\etjones\Desktop\AI OPS\AIOPS-optimization\minimum_cost_flow\data_files\supply2.csv") 
 data_demand = pd.read_csv(r"C:\Users\etjones\Desktop\AI OPS\AIOPS-optimization\minimum_cost_flow\data_files\demand2.csv") 
 #%%
+xls = pd.ExcelFile(r'C:\Users\ntoure\Desktop\Python Projects\transportation_network_cm.xlsx')
+data_connections = pd.read_excel(xls, 'Transportation_Network')
+data_supply = pd.read_excel(xls, 'Supply')
+data_demand = pd.read_excel(xls, 'Demand')
+#%%
+t1_start = process_time()
+#import libraries
+# update to your local repository
+data_connections = pd.read_csv(r"C:\Users\etjones\Desktop\AI OPS\AIOPS-optimization\minimum_cost_flow\data_files\Transportation_Network2.csv") 
+data_supply = pd.read_csv(r"C:\Users\etjones\Desktop\AI OPS\AIOPS-optimization\minimum_cost_flow\data_files\supply2.csv") 
+data_demand = pd.read_csv(r"C:\Users\etjones\Desktop\AI OPS\AIOPS-optimization\minimum_cost_flow\data_files\demand2.csv") 
+#%%
 list1 = data_connections.start.unique()
 list2 = data_connections.end.unique()
 
