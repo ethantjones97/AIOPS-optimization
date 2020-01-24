@@ -94,7 +94,7 @@ class Network:
             )
         )
         self.node_dict     = dict(zip(range(len(nodes)), nodes))
-        self.inv_node_dict = {v: k for k, v in self.node_dict.items()} 
+        self.inv_node_dict = dict(zip(nodes, range(len(nodes))))
         if self.verbose: 
             _LOGGER.info(f"node dictionary: {self.node_dict}")
 
