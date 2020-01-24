@@ -109,9 +109,6 @@ class Network:
             _LOGGER.info(f"end nodes: {self.end_nodes}")
             _LOGGER.info(f"capacities: {self.capacities}")
             _LOGGER.info(f"unit costs: {self.unit_costs}")
-        
-        # All defined now
-        self._nodes_defined = True
         return self
 
 
@@ -130,9 +127,6 @@ class Network:
         self.edges = list(zip(self.start_nodes, self.end_nodes))
         if self.verbose:
             _LOGGER.info(f"edges: {self.edges}")
-        
-        # All defined now
-        self._edges_defined = True
         return self
     
 
@@ -160,9 +154,6 @@ class Network:
         # Map supply nodes to integer representation
         func              = lambda x: self.inv_node_dict[x]
         self.supply_nodes = list(map(func, nodes))
-        
-        # All defined now
-        self._supply_defined = True
         return self        
 
 
@@ -190,9 +181,6 @@ class Network:
         # Map demand nodes to integer representation
         func              = lambda x: self.inv_node_dict[x]
         self.demand_nodes = list(map(func, nodes))
-        
-        # All defined now
-        self._demand_defined = True
         return self  
 
 
@@ -219,9 +207,6 @@ class Network:
             raise Exception('The total supply in each of the nodes mush equal the total demand.' + '\n' + 
                             f'Total Demand = {sum(self.demand_values)}' + '\n' +
                             f'Total supply = {sum(self.supply_values)}' + '\n')
-
-        # All defined now
-        self._combo_defined = True
         return self
 
 
@@ -262,12 +247,9 @@ class Network:
             Instance of Network.
         """
         # Error checking first
-        if not self._nodes_defined:
-            _LOGGER.exception("must define nodes before visualizing network")
+        if not self._network_defined:
+            _LOGGER.exception("must define network before visualizing")
             raise ValueError
-        if not self._edges_defined:
-            _LOGGER.exception("must define edges before visualizing network")
-            raise ValueError  
         
         # Build visualization
         f = Digraph(filename=filename)
@@ -284,11 +266,8 @@ class Network:
         f.view()
 
         # Clean up created files if no filename provided
-        if not filename: 
-            try:
-                remove('graphviz plot1.gv.pdf')
-            except:
-                pass
+        if not filename:
+            if exists('graphviz plot1.gv.pdf'): remove('graphviz plot1.gv.pdf')
 
         return self
 
@@ -412,11 +391,8 @@ class Network:
 
         # Clean up created files if no filename provided
         if not filename: 
-            try:
-                remove('Digraph.gv')
-                remove('Digraph.gv.pdf')
-            except:
-                pass
+            if exists('Digraph.gv'): remove('Digraph.gv')
+            if exists('Digraph.gv.pdf'): remove('Digraph.gv.pdf')
 
         return self
      
